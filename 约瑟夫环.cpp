@@ -2,80 +2,109 @@
 #include <string>
 #include <malloc.h>
 #include <iostream>
+using namespace std;
+typedef struct LNode {
+	int mima;
+	struct LNode *next;
 
-using namespace std; 
- typedef struct LNode{
- 	int data;
+}LNode, *LinkList;
 
- 	struct LNode *next;
- }LNode,*LinkList;
-bool CreateList(LinkList &L){  
-    
-	L=(LinkList)malloc(sizeof(LNode));
+LinkList pTail = NULL;
+bool CreateList(LinkList &L) {
 
-	if(!L) {
-	cout<<"L分配失败"<<endl;
-	return false;
-}
+	L = new LNode();
 
-	L->next=NULL;//头结点 
-	return true; 
-	
-}
-bool ListDelete(LinkList &L,int in_put){  //in_put用于指定删除哪个结点 
-	LinkList p=L;
-	while(p->next&&p->data!=in_put){
-		p=p->next;
-		}
-	if(!p->next) return false; 
-	LinkList q=p->next;
-	p->next=q->next;
-	free(q);
+	if (!L) {
+		cout << "L分配失败" << endl;
+
+		return false;
+	}
+
+
+	L->next = NULL;//头结点 
 	return true;
-} 
- bool ListInsert(LinkList &L,int i_data){
- 	
- 	 static LinkList pTail=L;
-	 pTail->next=NULL;//尾节点 
- 	 if(!pTail) cout<<"插入失败"<<endl;
-	 LinkList s=(LinkList)malloc(sizeof(LNode));
-	 if(!s) cout<<"分配内存失败"<<endl;
-	 s->data=i_data;
-	 pTail->next=s; 
-	 s->next=L;
-	 pTail=s;
-	 return true;
- }
- //这个函数有问题 
- int show(LinkList L,int in_put){  //in_put用于查询这个是第几个节点 
- 	LinkList p=L->next; 
- 	int j=0;
- 	while(p&&(j<in_put-1))p=p->next;
- 	return j;
- 	
- 	
+
 }
-int result(){
+bool ListDelete(LinkList L, int &m,int &number) {
+	LinkList p = L;
+	int j=0;
+	while (p->next && j<m-2) {
+		j++;
+		p = p->next;
+	}
+	if (!p->next) {
+		cout << "删除失败" << endl;
+		return false;
+	}
+	LinkList q = p->next;
+	p->next = q->next;
+	m=q->mima;
+	number--;
+	free(q);
 	
+	return true;
+}
+bool ListInsert(LinkList L, int i_mima) {
+	if(L->next==NULL) {
+	L->mima=i_mima;
+	L->next=L;
+	
+	return true;
+}
+	else{
+		LinkList s = new LNode();
+	if (!s) cout << "分配新节点内存失败" << endl;
+	s->mima=i_mima;
+	LinkList p=L;
+	while(p->next!=L){
+		p=p->next;
+	}
+	s->next =L ;
+	p->next = s;
+	
+	return true;
+	}
+	
+}
+void show(LinkList L){
+	int i=1;
+	while(i!=11){
+	  cout<<"第"<<i<<"个人"<<endl;
+	  cout<<"密码:"<<L->mima<<endl;
+    	i++;
+      L=L->next;
+	}
+	cout<<"------------------------------------------------------"<<endl;
+
 }
 int main(){
 	LinkList L;
 	CreateList(L);
-	int mima[100];
+	pTail=L;
+	int mima[100];  //用于保存密码 
 	int m;
+	int mima_number;
 	cout<<"请输入密码个数"<<endl;
 	cin>>mima[0];  //存密码个数 
+	mima_number=mima[0];
 	cout<<"请输入密码"<<endl;
-	for(int i=1;i<=mima[0];i++){
+	for(int i=1;i<=mima[0];i++){   //注意这里，mima[0]用于保存密码个数，mima[1]以后才是密码 
 		cin>>mima[i];
-		ListInsert(L,mima[i]);
+		ListInsert(L,mima[i]);  //插入密码 
 	}
+	show(L);
 	cout<<"请输入m"<<endl;
 	cin>>m;
-	while(mima[0]){
-	m=show(L,[m%mima[0]);
-	cout<<shouw(m);
-	ListDelete(L,m);
+	
+	for(int i=0;i<mima[0];i++){
+	cout<<m%mima_number<<endl;
+    int m0=m;
+	ListDelete(L,m,mima_number);
+	 show(L);
+	  for(int k=0;k<m0;k++){
+	
+    	L=L->next;
+	}
 	
 }
 	
